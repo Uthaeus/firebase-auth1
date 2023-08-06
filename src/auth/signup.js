@@ -1,5 +1,6 @@
-import { Form, Button, Card } from 'react-bootstrap';
-import { useRef } from 'react';
+import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 import { useAuth } from '../store/auth-context';
 
@@ -8,11 +9,23 @@ function Signup() {
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
     const { signup } = useAuth();
+    const [errorMessage, setErrorMessage] = useState();
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
+        setErrorMessage('');
+        setIsLoading(true);
 
-        signup(emailRef.current.value, passwordRef.current.value);
+        try {
+
+            await signup(emailRef.current.value, passwordRef.current.value);
+            navigate('/');
+        } catch {
+            setErrorMessage('Could not sign you up');
+        }
+        setIsLoading(false);
     }
 
     return (
@@ -20,8 +33,8 @@ function Signup() {
             <Card>
                 <Card.Body>
                     <h2 className='text-center mb-4'>Sign Up</h2>
-
-                    <Form>
+                    {errorMessage && <Alert variant={'danger'}>{errorMessage}</Alert>}
+                    <Form onSubmit={handleSubmit}>
                         <Form.Group id='email'>
                             <Form.Label>Email</Form.Label>
                             <Form.Control type='email' ref={emailRef} required />
@@ -37,7 +50,7 @@ function Signup() {
                             <Form.Control type='password' ref={passwordConfirmRef} required />
                         </Form.Group>
 
-                        <Button type='submit' className='w-100'>Sign Up</Button>
+                        <Button type='submit' disabled={isLoading} className='w-100' variant='primary'>Sign Up</Button>
                     </Form>
                 </Card.Body>
             </Card>
