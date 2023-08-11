@@ -1,6 +1,7 @@
-import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import { useAuth } from '../store/auth-context';
 
@@ -50,13 +51,13 @@ function Signup() {
                             <Form.Control type='password' ref={passwordConfirmRef} required />
                         </Form.Group>
 
-                        <Button type='submit' disabled={isLoading} className='w-100' variant='primary'>Sign Up</Button>
+                        <Button type='submit' disabled={isLoading} className='w-100' variant='primary'>{isLoading ? <Spinner as='span' animation='grow' size='sm' role='status' aria-hidden='true'> Loading...</Spinner>  : 'Submit'}</Button>
                     </Form>
                 </Card.Body>
             </Card>
 
             <div className='w-100 text-center mt-2'>
-                Already have an account? Log In 
+                Already have an account? <Link to='/signin'>Sign In</Link> 
             </div>
         </>
     );

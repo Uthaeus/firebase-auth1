@@ -28,10 +28,15 @@ function AuthContextProvider({ children }) {
         return auth.signInWithEmailAndPassword(email, password);
     }
 
+    function logout() {
+        return auth.signOut();
+    }
+
     const value = {
         currentUser,
         signup,
-        signin
+        signin,
+        logout
     }
 
     return (
